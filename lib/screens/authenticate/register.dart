@@ -1,16 +1,16 @@
 import 'package:dotodo/services/auth.dart';
 import 'package:flutter/material.dart';
 
-class SignIn extends StatefulWidget {
+class Register extends StatefulWidget {
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
-
+class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
 
   //TODO: Set state variables
+
   bool hidePassword = true;
   String email = '';
   String password = '';
@@ -31,11 +31,9 @@ class _SignInState extends State<SignIn> {
         child: Form(
           child: Column(
             children: <Widget>[
-              TextFormField(
-                  onChanged: (val) {
-                    setState(() => email = val);
-                  }
-              ),
+              TextFormField(onChanged: (val) {
+                setState(() => email = val);
+              }),
               SizedBox(height: 20.0),
               TextFormField(
                 obscureText: hidePassword,
@@ -59,21 +57,6 @@ class _SignInState extends State<SignIn> {
           ),
         ),
       ),
-    );
-  }
-
-  RaisedButton guestSignIn() {
-    return RaisedButton(
-      child: Text('Sign in as Guest'),
-      onPressed: () async {
-        dynamic result = await _auth.signInAnon();
-        if (result == null) {
-          print("Error Signing On");
-        } else {
-          print('Signed In');
-          print(result);
-        }
-      },
     );
   }
 }

@@ -16,6 +16,7 @@ class AuthService {
         .map(_userFromFirebaseUser);
 //        .map((FirebaseUser user) => _userFromFirebaseUser(user));
 
+
   }
 
   // // TODO:Sign-in Anonymously
@@ -39,4 +40,15 @@ class AuthService {
 
 
 // TODO: Sign-Out
+  Future signOut() async {
+    try {
+      return await _auth.signOut();
+    }
+    catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+
 }
