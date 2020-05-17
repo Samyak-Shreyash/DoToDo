@@ -1,5 +1,7 @@
 import 'package:dotodo/models/user.dart';
+import 'package:dotodo/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+//import 'globals';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -34,10 +36,31 @@ class AuthService {
 
 
 //TODO: Sign-in With Email-ID
-
+  Future signInWithEmail({String email, String password}) async {
+    try {
+      AuthResult result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      FirebaseUser user = result.user;
+      return _userFromFirebaseUser(user);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
 
 //TODO: Register with Email & Password
-
+  Future registerWithEmail({String email, String password}) async {
+    try {
+      AuthResult result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      FirebaseUser user = result.user;
+      await DatabaseService(uid: user.uid).updateUserData('SampleTask', 1, 0);
+      return _userFromFirebaseUser(user);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
 
 // TODO: Sign-Out
   Future signOut() async {
@@ -49,6 +72,16 @@ class AuthService {
       return null;
     }
   }
+
+//  //Send User UID to TaskDetails page
+//  Future<String> getUserId() async
+//  {
+//    final FirebaseUser user = await _auth.currentUser();
+//     Glo userId=  _userFromFirebaseUser(user).uid;
+//
+//
+//
+//  }
 
 
 }
