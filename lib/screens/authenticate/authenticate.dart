@@ -1,3 +1,5 @@
+import 'package:dotodo/screens/authenticate/register.dart';
+import 'package:dotodo/screens/authenticate/sign_in.dart';
 import 'package:flutter/material.dart';
 
 class Authenticate extends StatefulWidget {
@@ -6,10 +8,17 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
+  bool showSignIn = false;
+
+  void toggleView() {
+    setState(() => showSignIn = !showSignIn);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('Authenticate'),
-    );
+    if (showSignIn)
+      return SignIn(toggleView: toggleView);
+    else
+      return Register(toggleView: toggleView);
   }
 }

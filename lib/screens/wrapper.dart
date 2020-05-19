@@ -1,15 +1,16 @@
-
-// import 'package:dotodo/screens/authenticate/authenticate.dart';
-import 'package:dotodo/screens/authenticate/sign_in.dart';
-// import 'package:dotodo/screens/home/home.dart';
-
+import 'package:dotodo/models/user.dart';
+import 'package:dotodo/screens/authenticate/authenticate.dart';
+import 'package:dotodo/screens/home/home.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-// import 'package:dotodo/screens/home/home.dart';
 class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //  check to return Home Screens or Authentication Screens
-    return SignIn();
-  }
+    final user = Provider.of<User>(context);
+//    print(user);
+    // TODO: check to return Home Screens or Authentication Screens
+
+    return user != null ? Home() : Authenticate();
+  } 
 }
