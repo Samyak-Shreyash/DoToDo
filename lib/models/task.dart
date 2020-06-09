@@ -1,7 +1,7 @@
 class Task {
   final String taskName;
-  final int priority;
-  final int progress;
+  final String priority;
+  final String category;
 
-  Task({this.taskName, this.priority, this.progress});
+  Task({this.taskName, this.priority, this.category});
 }

@@ -13,15 +13,16 @@ class DatabaseService {
   final CollectionReference taskCollection =
       Firestore.instance.collection('tasks');
 
-  Future updateUserData(String taskName, int priority, int progress) async {
-    taskId:
-    taskId ?? uuid.v1();
+  Future updateUserData(
+      String taskName, String priority, String category) async {
+    taskId = taskId ?? uuid.v1();
+    print(taskId);
     return await taskCollection.document().setData({
       'user_id': uid,
       'task_id': taskId,
       'taskName': taskName,
       'priority': priority,
-      'progress': progress,
+      'category': category,
     });
   }
 
@@ -29,8 +30,8 @@ class DatabaseService {
     return snapshot.documents.map((doc) {
       return Task(
           taskName: doc.data['taskName'] ?? '',
-          priority: doc.data['priority'] ?? 0,
-          progress: doc.data['progress'] ?? 0);
+          priority: doc.data['priority'] ?? 'low',
+          category: doc.data['category'] ?? 'shopping');
     }).toList();
   }
 

@@ -15,6 +15,7 @@ class _TaskListState extends State<TaskList> {
 
     return ListView.builder(
       itemCount: tasks.length,
+      addAutomaticKeepAlives: false,
       itemBuilder: (context, index) {
         return TaskTile(task: tasks[index]);
       },

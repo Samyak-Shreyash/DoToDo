@@ -1,28 +1,40 @@
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:http/http.dart';
+import 'dart:convert';
 
+// import 'package:intl/intl.dart';
 // ignore: camel_case_types
 class customValidators {
-  String signInEmailError = 'Email Address not registered';
-  String registerEmailError = 'Invalid Email Address';
+  String _errorText;
 
-  RequiredValidator nameValidation() {
-    final nameValidator = RequiredValidator(errorText: 'Name is required');
-
-    return nameValidator;
+  Future<void> checkEmail(email) async
+  {
+    try {
+      Response response = await get(
+          'https://us.central1-dotodo-web.cloudfunctions.net/app');
+      Map data = jsonDecode(response.body);
+      print(data);
+    }
+    catch (e) {
+      print('Caught Error: $e');
+    }
   }
+}
 
-  MultiValidator emailValidation(String formType) {
-    final emailValidator = MultiValidator([
-      RequiredValidator(errorText: 'Email is required'),
-      EmailValidator(errorText: 'invalid email address'),
-    ]);
 
-    return emailValidator;
-  }
+void emptyValidation(val, field) {
+  _errorText =
+      _errorText + (requiredValidator(val) ? '' : '$field is required');
+}
 
-  MultiValidator textValidation(String formType) {
-    final emailValidator = MultiValidator([
-      RequiredValidator(errorText: 'Field is required'),
+void emailValidation(val, formType) {
+
+
+}
+
+MultiValidator textValidation(String formType) {
+  final emailValidator = MultiValidator([
+    RequiredValidator(errorText: 'Field is required'),
     ]);
 
     return emailValidator;
@@ -38,9 +50,20 @@ class customValidators {
     return passwordValidator;
   }
 
-  String matchPassword(val, password) {
-    final matchPassword = MatchValidator(errorText: 'passwords do not match')
-        .validateMatch(val, password);
-    return matchPassword;
-  }
+String matchPassword(val, password) {
+  final matchPassword = MatchValidator(errorText: 'passwords do not match')
+      .validateMatch(val, password);
+  return matchPassword;
 }
+
+
+bool requiredValidator(val) {
+  return val.isEmpty;
+}
+
+
+}
+
+
+
+

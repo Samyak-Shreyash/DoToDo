@@ -27,6 +27,8 @@ class AuthService {
       AuthResult result = await _auth.signInAnonymously();
       FirebaseUser user = result.user;
       print(user);
+      await DatabaseService(uid: user.uid)
+          .updateUserData('SampleTask', 'low', 'shopping');
       return _userFromFirebaseUser(user);
     }
     catch (e) {
@@ -54,7 +56,8 @@ class AuthService {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
-      await DatabaseService(uid: user.uid).updateUserData('SampleTask', 1, 0);
+      await DatabaseService(uid: user.uid)
+          .updateUserData('SampleTask', 'low', 'shopping');
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());

@@ -1,5 +1,6 @@
 import 'package:dotodo/models/task.dart';
 import 'package:flutter/material.dart';
+import 'package:dotodo/services/edit_task.dart';
 
 class TaskTile extends StatelessWidget {
   final Task task;
@@ -8,16 +9,17 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void _showSettingsPanel() {
-      showModalBottomSheet(
-          context: context,
-          builder: (context) {
-            return Container(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-              child: Text(task.taskName),
-            );
-          });
-    }
+//    void _showSettingsPanel() {
+//      print('Wow, in the same function');
+//      showModalBottomSheet(
+//          context: context,
+//          builder: (context) {
+//            return Container(
+//              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
+//              child: Text(task.taskName),
+//            );
+//          });
+//    }
 
     return Padding(
       padding: EdgeInsets.only(top: 8.0),
@@ -27,12 +29,17 @@ class TaskTile extends StatelessWidget {
           leading: CircleAvatar(
             radius: 25.0,
             backgroundColor: avatarColor(),
+            child: Icon(
+              Icons.shopping_cart,
+              color: Colors.black,
+            ),
           ),
           title: Text('${task.taskName}'),
           trailing: IconButton(
             onPressed: () {
               print('Vertical Button');
-              _showSettingsPanel();
+//              _showSettingsPanel();
+              SettingsPanel(task, context).showSettingsPanel();
             },
             icon: Icon(Icons.more_vert),
           ),
@@ -51,9 +58,9 @@ class TaskTile extends StatelessWidget {
   Color avatarColor() {
     Color returnColor = Colors.green;
 
-    if (task.priority == 1) returnColor = Colors.green;
-    if (task.priority == 2) returnColor = Colors.yellow;
-    if (task.priority == 3) returnColor = Colors.red;
+    if (task.priority.compareTo('low') == 0) returnColor = Colors.green;
+    if (task.priority.compareTo('high') == 0) returnColor = Colors.yellow;
+    if (task.priority.compareTo('critical') == 0) returnColor = Colors.red;
     return returnColor;
   }
 }
