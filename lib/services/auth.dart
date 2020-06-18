@@ -1,14 +1,15 @@
 import 'package:dotodo/models/user.dart';
-import 'package:dotodo/services/database.dart';
+import 'package:dotodo/services/jwtConfig.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'globals';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //  //TODO: Create Local User Object from Firebase User
-
   User _userFromFirebaseUser(FirebaseUser user) {
+    if (user != null) {
+      storeJWT(user);
+    }
     return user != null ? User(uid: user.uid) : null;
   }
 
@@ -16,8 +17,6 @@ class AuthService {
   Stream<User> get user {
     return _auth.onAuthStateChanged
         .map(_userFromFirebaseUser);
-//        .map((FirebaseUser user) => _userFromFirebaseUser(user));
-
 
   }
 
@@ -26,9 +25,6 @@ class AuthService {
     try {
       AuthResult result = await _auth.signInAnonymously();
       FirebaseUser user = result.user;
-      print(user);
-      await DatabaseService(uid: user.uid)
-          .updateUserData('SampleTask', 'low', 'shopping');
       return _userFromFirebaseUser(user);
     }
     catch (e) {
@@ -56,8 +52,6 @@ class AuthService {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
-      await DatabaseService(uid: user.uid)
-          .updateUserData('SampleTask', 'low', 'shopping');
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
@@ -69,22 +63,25 @@ class AuthService {
   Future signOut() async {
     try {
       return await _auth.signOut();
-    }
-    catch (e) {
+    } catch (e) {
       print(e.toString());
       return null;
     }
   }
 
-//  //Send User UID to TaskDetails page
-//  Future<String> getUserId() async
-//  {
-//    final FirebaseUser user = await _auth.currentUser();
-//     Glo userId=  _userFromFirebaseUser(user).uid;
-//
-//
-//
-//  }
+  //Get Token Value
+  Future<String> getTokenID(FirebaseUser user) async {
+    IdTokenResult _token = await user.getIdToken();
+    return _token.token;
+  }
 
+  //Get User ID
+  String getUserID(User user) {
+    return user.uid;
+  }
 
+  void storeJWT(FirebaseUser user) async {
+    IdTokenResult _token = await user.getIdToken();
+    JWTConfig().storeJWTToken("jwt", _token.token);
+  }
 }

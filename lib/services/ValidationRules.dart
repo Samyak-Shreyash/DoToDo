@@ -1,14 +1,11 @@
-import 'package:form_field_validator/form_field_validator.dart';
-import 'package:http/http.dart';
 import 'dart:convert';
 
-// import 'package:intl/intl.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+import 'package:http/http.dart';
+
 // ignore: camel_case_types
 class customValidators {
-  String _errorText;
-
-  Future<void> checkEmail(email) async
-  {
+  Future<void> checkEmail(email) async {
     try {
       Response response = await get(
           'https://us.central1-dotodo-web.cloudfunctions.net/app');
@@ -21,19 +18,19 @@ class customValidators {
   }
 
 
-MultiValidator emailValidation(String formType) {
-  final emailValidator = MultiValidator([
-    RequiredValidator(errorText: 'Field is required'),
-    EmailValidator(errorText: 'Not an email Address')
-  ]);
+  MultiValidator emailValidation(String formType) {
+    final emailValidator = MultiValidator([
+      RequiredValidator(errorText: 'Field is required'),
+      EmailValidator(errorText: 'Not an email Address')
+    ]);
 
-  return emailValidator;
+    return emailValidator;
 }
 
 
-MultiValidator textValidation(String formType) {
-  final textValidator = MultiValidator([
-    RequiredValidator(errorText: 'Field is required'),
+  MultiValidator textValidation(String formType) {
+    final textValidator = MultiValidator([
+      RequiredValidator(errorText: 'Field is required'),
     ]);
 
     return textValidator;
@@ -49,15 +46,15 @@ MultiValidator textValidation(String formType) {
     return passwordValidator;
   }
 
-String matchPassword(val, password) {
-  final matchPassword = MatchValidator(errorText: 'passwords do not match')
-      .validateMatch(val, password);
-  return matchPassword;
+  String matchPassword(val, password) {
+    final matchPassword = MatchValidator(errorText: 'passwords do not match')
+        .validateMatch(val, password);
+    return matchPassword;
 }
 
 
-bool requiredValidator(val) {
-  return val.isEmpty;
+  bool requiredValidator(val) {
+    return val.isEmpty;
 }
 
 

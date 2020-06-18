@@ -1,49 +1,64 @@
 import 'package:dotodo/models/task.dart';
-import 'package:dotodo/screens/home/task_list.dart';
+import 'package:dotodo/models/user.dart';
+import 'package:dotodo/screens/task/edit_task.dart';
+import 'package:dotodo/screens/task/task_list.dart';
 import 'package:dotodo/services/auth.dart';
-import 'package:dotodo/services/edit_task.dart';
+import 'package:dotodo/services/database.dart';
+import 'package:dotodo/services/jwtConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dotodo/services/database.dart';
 
 // ignore: must_be_immutable
 class Home extends StatelessWidget {
-
   final AuthService _auth = AuthService();
   Task task = new Task();
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
+//    debugPrint(user.uid);
     return StreamProvider<List<Task>>.value(
-      value: DatabaseService().tasks,
+      value: DatabaseService(uid: user.uid).tasks,
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.blueAccent[500],
-          title: Text("Do-ToDo"),
-          elevation: 0.0,
-          actions: <Widget>[
-            FlatButton.icon(
-              onPressed: () async {
-                await _auth.signOut();
-              },
-              label: Text('LogOut'),
-              icon: Icon(Icons.person_outline),
-            ),
-          ],
-        ),
+        appBar: buildAppBar(),
         body: TaskList(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            debugPrint('FAB clicked');
-            SettingsPanel(task, context).showSettingsPanel();
-//            navigateToDetail(Task('', '', ''), 'Add Task');
-          },
-          tooltip: 'Add Task',
-          child: Icon(Icons.add),
-        ),
+        floatingActionButton: buildFAB(context),
       ),
     );
   }
 
+  AppBar buildAppBar() {
+    return AppBar(
+      backgroundColor: Colors.blueAccent[500],
+      title: Text("Do-ToDo"),
+      elevation: 0.0,
+      actions: <Widget>[
+        signOut(),
+      ],
+    );
+  }
 
+  FloatingActionButton buildFAB(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () async {
+        debugPrint('FAB clicked');
+        var token = await JWTConfig().readJWTToken(key: "jwt");
+        debugPrint(token);
+        SettingsPanel(task, context).showSettingsPanel();
+//            navigateToDetail(Task('', '', ''), 'Add Task');
+      },
+      tooltip: 'Add Task',
+      child: Icon(Icons.add),
+    );
+  }
+
+  FlatButton signOut() {
+    return FlatButton.icon(
+      onPressed: () async {
+        await _auth.signOut();
+      },
+      label: Text('LogOut'),
+      icon: Icon(Icons.person_outline),
+    );
+  }
 }

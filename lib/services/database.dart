@@ -1,46 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotodo/models/task.dart';
-import 'package:uuid/uuid.dart';
 
 class DatabaseService {
   final String uid;
-  String taskId;
-  var uuid = Uuid();
 
   DatabaseService({this.uid});
 
   //Collection reference
-  CollectionReference get taskCollection => collectionReferenceName('task');
-
-  Future updateUserData(String taskName, String priority, String category) async {
-    taskId = taskId ?? uuid.v1();
-    print(taskId);
-    return await taskCollection.document().setData({
-      'user_id': uid,
-      'task_id': taskId,
-      'taskName': taskName,
-      'priority': priority,
-      'category': category,
-    });
-  }
+  CollectionReference get taskCollection => collectionReferenceName("task");
 
   List<Task> _taskListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
+//      debugPrint(doc.documentID);
       return Task(
-          taskName: doc.data['taskName'] ?? '',
+          id: doc.documentID ?? '',
+          title: doc.data['title'] ?? '',
           priority: doc.data['priority'] ?? 'low',
-          category: doc.data['category'] ?? 'shopping');
+          category: doc.data['category'] ?? 'Task');
     }).toList();
   }
-    
-      Stream<List<Task>> get tasks {
-        return taskCollection.snapshots().map(_taskListFromSnapshot);
-      }
 
+  Stream<List<Task>> get tasks {
+    return taskCollection.snapshots().map(_taskListFromSnapshot);
+  }
 
-      CollectionReference collectionReferenceName(String s) {
-      print(uid);
-      return Firestore.instance.collection('tasks');
-
-    }
+  CollectionReference collectionReferenceName(String prefix) {
+//       debugPrint("Prefix: $prefix");
+//       debugPrint("Suffix: $uid");
+    String collectionName = "$prefix" + "_" + uid;
+//       debugPrint("Collection Name: $collectionName");
+    return Firestore.instance.collection(collectionName);
+  }
 }
