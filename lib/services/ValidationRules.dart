@@ -19,25 +19,24 @@ class customValidators {
       print('Caught Error: $e');
     }
   }
+
+
+MultiValidator emailValidation(String formType) {
+  final emailValidator = MultiValidator([
+    RequiredValidator(errorText: 'Field is required'),
+    EmailValidator(errorText: 'Not an email Address')
+  ]);
+
+  return emailValidator;
 }
 
-
-void emptyValidation(val, field) {
-  _errorText =
-      _errorText + (requiredValidator(val) ? '' : '$field is required');
-}
-
-void emailValidation(val, formType) {
-
-
-}
 
 MultiValidator textValidation(String formType) {
-  final emailValidator = MultiValidator([
+  final textValidator = MultiValidator([
     RequiredValidator(errorText: 'Field is required'),
     ]);
 
-    return emailValidator;
+    return textValidator;
   }
 
   MultiValidator passwordValidation() {

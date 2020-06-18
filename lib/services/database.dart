@@ -10,11 +10,9 @@ class DatabaseService {
   DatabaseService({this.uid});
 
   //Collection reference
-  final CollectionReference taskCollection =
-      Firestore.instance.collection('tasks');
+  CollectionReference get taskCollection => collectionReferenceName('task');
 
-  Future updateUserData(
-      String taskName, String priority, String category) async {
+  Future updateUserData(String taskName, String priority, String category) async {
     taskId = taskId ?? uuid.v1();
     print(taskId);
     return await taskCollection.document().setData({
@@ -34,8 +32,15 @@ class DatabaseService {
           category: doc.data['category'] ?? 'shopping');
     }).toList();
   }
+    
+      Stream<List<Task>> get tasks {
+        return taskCollection.snapshots().map(_taskListFromSnapshot);
+      }
 
-  Stream<List<Task>> get tasks {
-    return taskCollection.snapshots().map(_taskListFromSnapshot);
-  }
+
+      CollectionReference collectionReferenceName(String s) {
+      print(uid);
+      return Firestore.instance.collection('tasks');
+
+    }
 }
