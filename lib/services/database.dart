@@ -9,38 +9,43 @@ class DatabaseService {
 
   DatabaseService({this.uid});
 
-  //Collection reference
-  CollectionReference get taskCollection => collectionReferenceName('task');
+  CollectionReference get taskCollection => getCollection('task');
 
-  Future updateUserData(String taskName, String priority, String category) async {
+  Future updateUserData(
+      String taskName, String priority, String category) async {
     taskId = taskId ?? uuid.v1();
     print(taskId);
     return await taskCollection.document().setData({
-      'user_id': uid,
-      'task_id': taskId,
-      'taskName': taskName,
+//      'user_id': uid,
+//      'task_id': taskId,
+      'title': taskName,
       'priority': priority,
       'category': category,
     });
   }
 
-  List<Task> _taskListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents.map((doc) {
+  CollectionReference getCollection(String s) {
+    print(uid);
+    return Firestore.instance.collection('task_$uid');
+      
+  }
+
+  List<Task> _taskListFromSnapshot(QuerySnapshot snapshots) {
+    print(snapshots);
+    return snapshots.documents.map((doc){
+//      print('Document ID : ${doc.documentID}');
       return Task(
-          taskName: doc.data['taskName'] ?? '',
-          priority: doc.data['priority'] ?? 'low',
-          category: doc.data['category'] ?? 'shopping');
+//        id: doc.documentID??uuid.v1(),
+        title: doc.data['title']??'',
+        priority: doc.data['priority']??'low',
+        category: doc.data['category']??'task'
+      );
     }).toList();
   }
-    
-      Stream<List<Task>> get tasks {
-        return taskCollection.snapshots().map(_taskListFromSnapshot);
-      }
 
+  Stream<List<Task>> get tasks {
+    return taskCollection.snapshots()
+    .map(_taskListFromSnapshot);
+  }
 
-      CollectionReference collectionReferenceName(String s) {
-      print(uid);
-      return Firestore.instance.collection('tasks');
-
-    }
-}
+  }

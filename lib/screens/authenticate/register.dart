@@ -1,7 +1,6 @@
-import 'package:dotodo/services/ValidationRules.dart';
+// import 'package:dotodo/services/ValidationRules.dart';
 import 'package:dotodo/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;
@@ -16,7 +15,7 @@ class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
 
-  //TODO: Set state variables
+ // // TODO: Set state variables
   String formPage = 'Register';
   bool hidePassword = true;
   bool hideConfirmPassword = true;
@@ -51,13 +50,11 @@ class _RegisterState extends State<Register> {
         key: _formKey,
         child: Column(
           children: <Widget>[
-            createTextField("Name", TextInputType.text,
-                customValidators().textValidation(formPage)),
+            createTextField("Name", TextInputType.text),
             SizedBox(height: 20.0),
-            createTextField('Email ID', TextInputType.emailAddress,
-                customValidators().emailValidation(formPage)),
+            createTextField('Email ID', TextInputType.emailAddress),
             SizedBox(height: 20.0),
-            passwordField(customValidators().passwordValidation()),
+            passwordField(),
             SizedBox(height: 20.0),
             confirmPasswordField(password),
             SizedBox(height: 20.0),
@@ -69,10 +66,8 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  TextFormField createTextField(String label, TextInputType type,
-      MultiValidator validatorType) {
+  TextFormField createTextField(String label, TextInputType type) {
     return TextFormField(
-      validator: validatorType,
       keyboardType: type,
       onChanged: (val) {
         setState(() => email = val);
@@ -87,9 +82,6 @@ class _RegisterState extends State<Register> {
   TextFormField confirmPasswordField(String password) {
     return TextFormField(
       obscureText: hideConfirmPassword,
-      validator: (val) =>
-          MatchValidator(errorText: 'passwords do not match').validateMatch(
-              val, password),
       onChanged: (val) {
         setState(() => password = val);
       },
@@ -111,10 +103,9 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  TextFormField passwordField(MultiValidator passwordValidator) {
+  TextFormField passwordField() {
     return TextFormField(
       obscureText: hidePassword,
-      validator: passwordValidator,
       onChanged: (val) {
         setState(() => password = val);
       },

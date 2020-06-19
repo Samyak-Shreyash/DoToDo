@@ -1,10 +1,6 @@
-//import 'package:flutter/cupertino.dart';
+import 'package:dotodo/services/categories.dart';
 import 'package:flutter/material.dart';
 import 'package:dotodo/models/task.dart';
-import 'package:form_field_validator/form_field_validator.dart';
-
-import 'ValidationRules.dart';
-import 'categories.dart';
 
 class SettingsPanel {
   final Task task;
@@ -13,9 +9,10 @@ class SettingsPanel {
   SettingsPanel(this.task, this.context);
 
   void showSettingsPanel() {
-    String title = '${task.taskName}';
+    String title = '${task.title}';
     if (title == null || title == '' || title == "null") {
       print("Blank");
+      // print(Categories.getCategoryList());
       title = "New Task";
     }
     showModalBottomSheet(
@@ -37,7 +34,7 @@ class _SettingsForm extends StatefulWidget {
 class __SettingsFormState extends State<_SettingsForm> {
   final _formKey = GlobalKey<FormState>();
 
-  List<String> categories = ["Shopping", "Call", 'Task', 'Alarm'];
+  List<String> categories = Categories().getCategoryList();
 
   String _title;
   String _priority;
@@ -56,8 +53,7 @@ class __SettingsFormState extends State<_SettingsForm> {
             style: TextStyle(fontSize: 18.0),
           ),
           SizedBox(height: 20.0),
-          createTextField('Task Title', TextInputType.text,
-              customValidators().textValidation("")),
+          createTextField('Task Title', TextInputType.text),
           SizedBox(height: 20.0),
           DropdownButtonFormField(
             value: _category ?? categories[0],
@@ -108,10 +104,8 @@ class __SettingsFormState extends State<_SettingsForm> {
     );
   }
 
-  TextFormField createTextField(
-      String label, TextInputType type, MultiValidator validatorType) {
+  TextFormField createTextField(String label, TextInputType type) {
     return TextFormField(
-      validator: validatorType,
       keyboardType: type,
       onChanged: (val) {
         setState(() => _title = val);

@@ -1,4 +1,5 @@
 import 'package:dotodo/models/task.dart';
+import 'package:dotodo/services/categories.dart';
 import 'package:flutter/material.dart';
 import 'package:dotodo/services/edit_task.dart';
 
@@ -9,17 +10,6 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-//    void _showSettingsPanel() {
-//      print('Wow, in the same function');
-//      showModalBottomSheet(
-//          context: context,
-//          builder: (context) {
-//            return Container(
-//              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-//              child: Text(task.taskName),
-//            );
-//          });
-//    }
 
     return Padding(
       padding: EdgeInsets.only(top: 8.0),
@@ -30,15 +20,18 @@ class TaskTile extends StatelessWidget {
             radius: 25.0,
             backgroundColor: avatarColor(),
             child: Icon(
-              Icons.shopping_cart,
+              Categories().getAvatarImage(task.category),
               color: Colors.black,
             ),
           ),
-          title: Text('${task.taskName}'),
+           title: Text('${task.title}'),
+           
+
           trailing: IconButton(
             onPressed: () {
               print('Vertical Button');
-//              _showSettingsPanel();
+              print(task);
+//              _showSettingsPanel(); 
               SettingsPanel(task, context).showSettingsPanel();
             },
             icon: Icon(Icons.more_vert),

@@ -1,7 +1,7 @@
-import 'package:dotodo/services/ValidationRules.dart';
+// import 'package:dotodo/services/ValidationRules.dart';
 import 'package:dotodo/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:form_field_validator/form_field_validator.dart';
+// import 'package:form_field_validator/form_field_validator.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
@@ -38,9 +38,9 @@ class _SignInState extends State<SignIn> {
           key: _formKey,
           child: Column(
             children: <Widget>[
-              emailField(customValidators().emailValidation(formPage)),
+              emailField(),
               SizedBox(height: 20.0),
-              passwordField(customValidators().passwordValidation()),
+              passwordField(),
               SizedBox(height: 20.0),
               Row(
                 children: <Widget>[
@@ -59,8 +59,8 @@ class _SignInState extends State<SignIn> {
   TextFormField confirmPasswordField(String password) {
     return TextFormField(
       obscureText: hideConfirmPassword,
-      validator: (val) => MatchValidator(errorText: 'passwords do not match')
-          .validateMatch(val, password),
+//      validator: (val) => MatchValidator(errorText: 'passwords do not match')
+//          .validateMatch(val, password),
       onChanged: (val) {
         setState(() => password = val);
       },
@@ -82,10 +82,10 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  TextFormField passwordField(MultiValidator passwordValidator) {
+  TextFormField passwordField() {
     return TextFormField(
       obscureText: hidePassword,
-      validator: passwordValidator,
+//      validator: passwordValidator,
       onChanged: (val) {
         setState(() => password = val);
       },
@@ -106,9 +106,9 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  TextFormField emailField(MultiValidator emailValidator) {
+  TextFormField emailField() {
     return TextFormField(
-      validator: emailValidator,
+//      validator: emailValidator,
       keyboardType: TextInputType.emailAddress,
       onChanged: (val) {
         setState(() => email = val);
