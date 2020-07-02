@@ -1,8 +1,23 @@
 class Task {
-  String id;
-  final String title;
-  final String priority;
-  final String category;
 
-  Task({this.id, this.title, this.priority, this.category});
+  String id;
+  String title;
+  String category;
+  String priority;
+
+  Task({this.id, this.title, this.category, this.priority});
+
+  Map<String, dynamic> toJson() =>
+      {
+        'title': title,
+        'category': category,
+        'priority': priority,
+      };
+
+  Task.fromJson(Map<String, dynamic> json, String ID)
+    : id = ID?? '',
+    title = json['title']??'',
+    category = json['category']??'Task',
+    priority = json['priority']??'low';
+
 }

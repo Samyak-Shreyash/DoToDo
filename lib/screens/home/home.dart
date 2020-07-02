@@ -4,21 +4,19 @@ import 'package:dotodo/screens/task/edit_task.dart';
 import 'package:dotodo/screens/task/task_list.dart';
 import 'package:dotodo/services/auth.dart';
 import 'package:dotodo/services/database.dart';
-import 'package:dotodo/services/jwtConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class Home extends StatelessWidget {
   final AuthService _auth = AuthService();
-  Task task = new Task();
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
 //    debugPrint(user.uid);
     return StreamProvider<List<Task>>.value(
-      value: DatabaseService(uid: user.uid).tasks,
+      value: DatabaseService(uid: user.uid,parentID: user.uid).tasks,
       child: Scaffold(
         appBar: buildAppBar(),
         body: TaskList(),
@@ -42,9 +40,7 @@ class Home extends StatelessWidget {
     return FloatingActionButton(
       onPressed: () async {
         debugPrint('FAB clicked');
-        var token = await JWTConfig().readJWTToken(key: "jwt");
-        debugPrint(token);
-        SettingsPanel(task, context).showSettingsPanel();
+        SettingsPanel(Task(), context).showSettingsPanel();
 //            navigateToDetail(Task('', '', ''), 'Add Task');
       },
       tooltip: 'Add Task',

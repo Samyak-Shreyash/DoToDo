@@ -104,7 +104,7 @@ class __SettingsFormState extends State<_SettingsForm> {
           RaisedButton(
             color: Colors.green,
             child: Text(
-              'Update',
+              (widget.task.id != null) ? 'Update' : 'Create',
               style: TextStyle(color: Colors.white),
             ),
             onPressed: () async {
