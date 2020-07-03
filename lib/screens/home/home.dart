@@ -14,9 +14,9 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-//    debugPrint(user.uid);
+//    debugPrint(user.id);
     return StreamProvider<List<Task>>.value(
-      value: DatabaseService(uid: user.uid,parentID: user.uid).tasks,
+      value: DatabaseService(id: user.id, parentID: user.id).tasks,
       child: Scaffold(
         appBar: buildAppBar(),
         body: TaskList(),
@@ -40,7 +40,7 @@ class Home extends StatelessWidget {
     return FloatingActionButton(
       onPressed: () async {
         debugPrint('FAB clicked');
-        SettingsPanel(Task(), context).showSettingsPanel();
+        SettingsPanel(new Task(), context).showSettingsPanel();
 //            navigateToDetail(Task('', '', ''), 'Add Task');
       },
       tooltip: 'Add Task',

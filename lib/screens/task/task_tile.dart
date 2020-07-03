@@ -24,7 +24,7 @@ class TaskTile extends StatelessWidget {
           trailing: IconButton(
             onPressed: () {
               debugPrint('Delete');
-              DatabaseService(uid:user.uid).deleteTask(task.id);
+              DatabaseService(id: user.id).deleteTask(task.id);
             },
             icon: Icon(Icons.delete),
           ),

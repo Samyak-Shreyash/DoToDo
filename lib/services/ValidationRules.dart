@@ -8,7 +8,7 @@ class customValidators {
   Future<void> checkEmail(email) async {
     try {
       Response response = await get(
-          'https://us.central1-dotodo-web.cloudfunctions.net/app');
+          'https://us.central1-dotodo-web.cloudfunctions.net/app/users/$email');
       Map data = jsonDecode(response.body);
       print(data);
     }
@@ -21,9 +21,10 @@ class customValidators {
   MultiValidator emailValidation(String formType) {
     final emailValidator = MultiValidator([
       RequiredValidator(errorText: 'Field is required'),
-      EmailValidator(errorText: 'Not an email Address')
+      EmailValidator( errorText: 'Not an email Address'),
+//      EmailMatchValidator(errorText: 'Email Address not found'),
     ]);
-
+print(emailValidator.errorText);
     return emailValidator;
 }
 
@@ -43,8 +44,7 @@ class customValidators {
           errorText: 'password must be at least 8 digits long'),
     ]);
 
-    return passwordValidator;
-  }
+    return passwordValidator;}
 
   String matchPassword(val, password) {
     final matchPassword = MatchValidator(errorText: 'passwords do not match')

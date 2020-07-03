@@ -1,5 +1,4 @@
 import 'package:dotodo/models/user.dart';
-import 'package:dotodo/services/jwtConfig.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
@@ -7,17 +6,12 @@ class AuthService {
 
   //  //TODO: Create Local User Object from Firebase User
   User _userFromFirebaseUser(FirebaseUser user) {
-    if (user != null) {
-      storeJWT(user);
-    }
-    return user != null ? User(uid: user.uid) : null;
+    return user != null ? User(id: user.uid) : null;
   }
 
   //TODO: Create Stream to listen for Authentication changes
   Stream<User> get user {
-    return _auth.onAuthStateChanged
-        .map(_userFromFirebaseUser);
-
+    return _auth.onAuthStateChanged.map(_userFromFirebaseUser);
   }
 
   // // TODO:Sign-in Anonymously
@@ -26,12 +20,10 @@ class AuthService {
       AuthResult result = await _auth.signInAnonymously();
       FirebaseUser user = result.user;
       return _userFromFirebaseUser(user);
-    }
-    catch (e) {
+    } catch (e) {
       print(e.toString());
     }
   }
-
 
 //TODO: Sign-in With Email-ID
   Future signInWithEmail({String email, String password}) async {
@@ -77,11 +69,11 @@ class AuthService {
 
   //Get User ID
   String getUserID(User user) {
-    return user.uid;
+    return user.id;
   }
 
-  void storeJWT(FirebaseUser user) async {
-    IdTokenResult _token = await user.getIdToken();
-    JWTConfig().storeJWTToken("jwt", _token.token);
-  }
+//  void storeJWT(FirebaseUser user) async {
+//    IdTokenResult _token = await user.getIdToken();
+//    JWTConfig().storeJWTToken("jwt", _token.token);
+//  }
 }

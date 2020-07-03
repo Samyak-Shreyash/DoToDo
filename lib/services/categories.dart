@@ -6,7 +6,7 @@ class Categories {
     TaskCategory(name: "Shopping", avatarImage: Icons.shopping_cart),
     TaskCategory(name: "Alarm", avatarImage: Icons.add_alarm),
     TaskCategory(name: "Call", avatarImage: Icons.add_call),
-    TaskCategory(name: "Task", avatarImage: Icons.album),
+    TaskCategory(name: "", avatarImage: Icons.album),
     TaskCategory(name: "Exercise", avatarImage: Icons.accessibility_new),
   ];
 

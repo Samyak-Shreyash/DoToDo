@@ -1,8 +1,11 @@
 import 'package:dotodo/models/task.dart';
+import 'package:dotodo/models/user.dart';
 import 'package:dotodo/screens/shared.dart';
 import 'package:dotodo/services/ValidationRules.dart';
 import 'package:dotodo/services/categories.dart';
+import 'package:dotodo/services/database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPanel {
   final Task task;
@@ -34,13 +37,12 @@ class _SettingsForm extends StatefulWidget {
 class __SettingsFormState extends State<_SettingsForm> {
   final _formKey = GlobalKey<FormState>();
 
-  String _title;
-  String _priority;
-  String _category;
   double _priorityValue;
 
   @override
   Widget build(BuildContext context) {
+  _priorityValue=getPriorityValue(widget.task.priority);
+    final user = Provider.of<User>(context);
     List<String> categories = Categories().getCategoryList();
     String formTitle = (widget.task.id != null) ? 'Edit Task' : 'Create Task';
     return Form(
@@ -57,7 +59,8 @@ class __SettingsFormState extends State<_SettingsForm> {
             validator: customValidators().textValidation(""),
             keyboardType: TextInputType.text,
             onChanged: (val) {
-              setState(() => _title = val);
+
+              setState(() => widget.task.title = val);
             },
             decoration: InputDecoration(
                 labelText: 'Task Title',
@@ -66,7 +69,7 @@ class __SettingsFormState extends State<_SettingsForm> {
           ),
           SizedBox(height: 20.0),
           DropdownButtonFormField(
-              value: widget.task.category ?? "Task",
+              value: widget.task.category ?? "",
               items: categories.map((category) {
                 return DropdownMenuItem(
                   value: category,
@@ -76,19 +79,19 @@ class __SettingsFormState extends State<_SettingsForm> {
                           backgroundColor: Colors.grey[400],
                           foregroundColor: Colors.black),
                       SizedBox(width: 10.0),
-                      Text(category)
+                      Text(category!=""?category:"Uncategorized")
                     ],
                   ),
                 );
               }).toList(),
               onChanged: (val) {
-                setState(() => _category = val);
+                setState(() => widget.task.category = val);
               }),
           SizedBox(height: 20.0),
           Slider(
             value: _priorityValue ?? 1.0,
             activeColor: SharedWidgets().priorityColor(
-                priority: _priority ?? "low"),
+                priority: widget.task.priority ?? "low"),
             inactiveColor: Colors.grey,
             min: 1.0,
             max: 3.0,
@@ -96,7 +99,7 @@ class __SettingsFormState extends State<_SettingsForm> {
             onChanged: (double value) {
               setState(() {
                 _priorityValue = value;
-                _priority = setPriority(_priorityValue);
+                widget.task.priority = setPriority(_priorityValue);
               });
             },
           ),
@@ -108,12 +111,16 @@ class __SettingsFormState extends State<_SettingsForm> {
               style: TextStyle(color: Colors.white),
             ),
             onPressed: () async {
-              _title = _title ?? widget.task.title ?? "";
-              _priority = _priority ?? widget.task.priority ?? "low";
-              _category = _category ?? widget.task.category ?? "task";
-              debugPrint(_title);
-              debugPrint(_priority);
-              debugPrint(_category);
+              if (_formKey.currentState.validate()) {
+                widget.task.priority = widget.task.priority ?? "low";
+                widget.task.category = widget.task.category ?? "";
+                widget.task.parentID = widget.task.parentID ?? user.id;
+//                debugPrint(widget.task.toJson().toString());
+                await DatabaseService(id:user.id).updateUserData(widget.task);
+
+              }
+
+
             },
           ),
         ],
@@ -123,16 +130,17 @@ class __SettingsFormState extends State<_SettingsForm> {
 
   Color priorityColor() {
     // ignore: unnecessary_statements
-    _priority = _priority ?? 'low';
+    widget.task.priority = widget.task.priority ?? 'low';
     Color returnColor = Colors.green;
 
-    if (_priority.compareTo('low') == 0) returnColor = Colors.green;
-    if (_priority.compareTo('high') == 0) returnColor = Colors.yellow[700];
-    if (_priority.compareTo('critical') == 0) returnColor = Colors.red;
+    if (widget.task.priority.compareTo('low') == 0) returnColor = Colors.green;
+    if (widget.task.priority.compareTo('high') == 0) returnColor = Colors.yellow[700];
+    if (widget.task.priority.compareTo('critical') == 0) returnColor = Colors.red;
     return returnColor;
   }
 
   double getPriorityValue(String priority) {
+    priority=priority??"";
     if (priority.toLowerCase() == "critical") return 3.0;
     if (priority.toLowerCase() == "high") return 2.0;
     return 1.0;
